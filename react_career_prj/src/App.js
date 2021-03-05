@@ -1,13 +1,16 @@
-import Dashboard from './components/Home';
+import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import Home from './components/Home';
+import { Home, Auth } from './pages';
+import Homepage from './components/Home';
 import SignIn from './components/SignIn/SignIn';
 
 function App() {
   return (
     <div>
-      <Route path="/" component={Home} exact />
-      <Route path="/signIn" component={SignIn} />
+      <Route exact path="/" component={Home} />
+      <Route path="/auth" component={Auth} />
+      {/* <Route path="/" component={Homepage} exact />
+      <Route path="/signIn" component={SignIn} /> */}
     </div>
   );
 }
