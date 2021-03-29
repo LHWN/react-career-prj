@@ -1,139 +1,212 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
+import * as authActions from '../../redux/modules/auth';
+import { isEmail } from 'validator';
 
 const InsertFormPositioner = styled.div`
-    /* width: 100%; */
-    /* display: flex;
+  /* width: 100%; */
+  /* display: flex;
     justify-content: center;
     align-items: center; */
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    :root {
-        --color-shadow-inset: inset 0 1px 0 rgba(225,228,232,0.2);
-    }
+  :root {
+    --color-shadow-inset: inset 0 1px 0 rgba(225, 228, 232, 0.2);
+  }
 `;
 
 const InsertFormContainer = styled.div`
-    width: 300px;
+  width: 300px;
 
-    .largeText {
-        text-align: center;
-        font-size: 24px;
-        font-weight: 300;
-    }
+  .largeText {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 300;
+  }
 
-    .mediumText {
-        text-align: center;
-        font-size: 16px;
-        font-weight: 300;
-    }
+  .mediumText {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 300;
+  }
 
-    .smallText {
-        text-align: center;
-        font-size: 14px;
-        font-weight: 300;
-    }
+  .smallText {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 300;
+  }
 `;
 
 const InsertForm = styled.div`
-    /* width: 300px; */
+  /* width: 300px; */
 
-    border: 1px solid #eaecef;
-    border-radius: 5px;
+  border: 1px solid #eaecef;
+  border-radius: 5px;
 
-    position: relative; /* 추후 박스 하단에 추가 버튼을 위치시키기 위한 설정 */
-    background: #F6F8FA;    
-    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
+  position: relative; /* 추후 박스 하단에 추가 버튼을 위치시키기 위한 설정 */
+  background: #f6f8fa;
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.04);
 
-    margin: 0 auto; 
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  .accountLabel {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 7px;
+    text-align: left;
+    font-size: 14px;
+    color: #24292e;
+  }
+
+  .input-block {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 5px 12px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #24292e;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    outline: none;
+    box-shadow: --color-shadow-inset;
     box-sizing: border-box;
+  }
 
-    .accountLabel {
-        font-weight: 600;
-        display: block;
-        margin-bottom: 7px;
-        text-align: left;
-        font-size: 14px;
-        color: #24292e;
-    }
-
-    .input-block {
-        margin-top: 5px;
-        margin-bottom: 15px;
-        width: 100%;
-        padding: 5px 12px;
-        font-size: 14px;
-        line-height: 20px;
-        color: #24292e;
-        vertical-align: middle;
-        background-color: #fff;
-        border: 1px solid #e1e4e8;
-        border-radius: 6px;
-        outline: none;
-        box-shadow: --color-shadow-inset;
-        box-sizing: border-box;
-    }
-
-    .btn {
-        width: 90%;
-    }
+  .btn {
+    width: 90%;
+  }
 `;
 
 const RequestAccountLink = styled.div`
-    padding: 15px 20px;
+  padding: 15px 20px;
 
-    text-align: center;
-    border: 1px solid #d1d5da;
-    border-radius: 5px;
-    box-sizing: border-box;
-    margin-top: 16px;   
+  text-align: center;
+  border: 1px solid #d1d5da;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-top: 16px;
 
-    p {
-        margin-top: 0;
+  p {
+    margin-top: 0;
+  }
+
+  .requestAccText {
+    color: #0366d6;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
     }
-
-    .requestAccText {
-        color: #0366d6;
-        cursor: pointer;
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-
-
+  }
 `;
 
+class SignInForm extends Component {
+  // setError = (message) => {
+  //   const { AuthActions } = this.props;
+  //   AuthActions.setError({
+  //     form: 'login',
+  //     message
+  //   });
+  // };
 
-export default function SignInForm() {
+  // validate = {
+  //   email: (value) => {
+  //     if (!isEmail(value)) {
+  //       this.setError('잘못된 이메일 형식입니다.');
+  //       return false;
+  //     }
+  //     return true;
+  //   }
+  // };
+
+  componentWillUnmount() {
+    const { AuthActions } = this.props.AuthActions;
+    AuthActions.initializeForm('login');
+  }
+
+  handleChange = (e) => {
+    console.log('handleChange');
+    const AuthActions = this.props.AuthActions;
+    const { name, value } = e.target;
+
+    AuthActions.changeInput({
+      name,
+      value,
+      form: 'login'
+    });
+
+    // 검증 작업
+    // console.log(this.validate['email']);
+    // const validation = this.validate[name](value);
+    // if (!validation) return;
+  };
+
+  render() {
+    const { handleChange } = this;
     return (
-        <InsertFormPositioner>
-            <InsertFormContainer>
-                <h1 className="largeText">Sign in to My Career!</h1>
-                <InsertForm>
-                    <label for="login_field" className="accountLabel">Username or email address</label>
-                    <input type="text" name="login" id="login_field" className="input-block" autocapitalize="off" autocorrect="off" autocomplete="username" autofocus="autofocus"></input>
-                    <label for="password" className="accountLabel">Password</label>
-                    <input type="password" name="password" id="password" className="input-block" autocomplete="current-password"></input>
-                    <a>SUBMIT</a> 
-                </InsertForm>
-                <RequestAccountLink>
-                    <p className="mediumText">Do you want to see my career?</p>
-                    <a className="mediumText" className="requestAccText" href="mailto:wlsekffo1674@naver.com
-                    ?subject=Request%20for%20an%20account.
-                    &body=Dear%20Hyewon%0D%0A%0D%0A
-                    I%20am%20writing%20to%20request%20an%20account%20that%20I%20can%20access.%0D%0A
-                    I%20will%20be%20waiting%20for%20your%20reply.%20Thank%20you.%0D%0A%0D%0A
-                    Best%20Regards.%0D%0A">Send me an email!</a>
-                </RequestAccountLink>
-            </InsertFormContainer>
-        </InsertFormPositioner>
+      <InsertFormPositioner>
+        <InsertFormContainer>
+          <h1 className="largeText">Sign in to My Career!</h1>
+          <InsertForm>
+            <label for="login_field" className="accountLabel">
+              Username or email address
+            </label>
+            <input
+              type="text"
+              name="email"
+              id="login_field"
+              className="input-block"
+              autocapitalize="off"
+              autocorrect="off"
+              autocomplete="username"
+              autofocus="autofocus"
+              onChange={handleChange}
+            ></input>
+            <label for="password" className="accountLabel">
+              Password
+            </label>
+            <input type="password" name="password" id="password" className="input-block" autocomplete="current-password" onChange={handleChange}></input>
+            <a>SUBMIT</a>
+          </InsertForm>
+          <RequestAccountLink>
+            <p className="mediumText">Do you want to see my career?</p>
+            <a
+              className="mediumText"
+              className="requestAccText"
+              href="mailto:wlsekffo1674@naver.com
+                          ?subject=Request%20for%20an%20account.
+                          &body=Dear%20Hyewon%0D%0A%0D%0A
+                          I%20am%20writing%20to%20request%20an%20account%20that%20I%20can%20access.%0D%0A
+                          I%20will%20be%20waiting%20for%20your%20reply.%20Thank%20you.%0D%0A%0D%0A
+                          Best%20Regards.%0D%0A"
+            >
+              Send me an email!
+            </a>
+          </RequestAccountLink>
+        </InsertFormContainer>
+      </InsertFormPositioner>
     );
+  }
 }
+
+export default connect(
+  (state) => ({
+    form: state.auth.getIn(['login', 'form'])
+  }),
+  (dispatch) => ({
+    AuthActions: bindActionCreators(authActions, dispatch)
+  })
+)(SignInForm);

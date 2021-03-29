@@ -180,8 +180,7 @@ module.exports = function (webpackEnv) {
             // initialization, it doesn't blow up the WebpackDevServer client, and
             // changing JS code would still trigger a refresh.
           ]
-        : paths.appIndexJs,
-      'react-hot-loader/patch'
+        : paths.appIndexJs
     ],
     output: {
       // The build folder.
@@ -382,15 +381,14 @@ module.exports = function (webpackEnv) {
 
                 plugins: [
                   [
-                    require.resolve('babel-plugin-named-asset-import'),
+                    (require.resolve('babel-plugin-named-asset-import'),
                     {
                       loaderMap: {
                         svg: {
                           ReactComponent: '@svgr/webpack?-svgo,+titleProp,+ref![path]'
                         }
                       }
-                    },
-                    'react-hot-loader/babel'
+                    })
                   ],
                   isEnvDevelopment && shouldUseReactRefresh && require.resolve('react-refresh/babel')
                 ].filter(Boolean),
