@@ -46,6 +46,9 @@ const initialState = Map({
       email: '',
       password: ''
     }),
+    exists: Map({
+      email: false
+    }),
     error: null
   }),
   result: Map({})
@@ -60,20 +63,29 @@ export default handleActions(
     },
     [INITIALIZE_FORM]: (state, action) => {
       const initialForm = initialState.get(action.payload);
+      console.log('initiallizeForm');
       return state.set(action.payload, initialForm);
+    },
+    [SET_ERROR]: (state, action) => {
+      const { form, message } = action.payload;
+      return state.setIn([form, 'error'], message);
     },
     ...pender({
       type: CHECK_EMAIL_EXISTS,
-      onSuccess: (state, action) => state.setIn(['register', 'exists', 'email'], action.payload.data.exists)
+      onSuccess: (state, action) => state.setIn(['login', 'exists', 'email'], action.payload.data.exists)
     }),
     ...pender({
       type: CHECK_USERNAME_EXISTS,
       onSuccess: (state, action) => state.setIn(['register', 'exists', 'username'], action.payload.data.exists)
     }),
-    [SET_ERROR]: (state, action) => {
-      const { form, message } = action.payload;
-      return state.setIn([form, 'error'], message);
-    }
+    ...pender({
+      type: LOCAL_LOGIN,
+      onSuccess: (state, action) => state.set('result', Map(action.payload.data))
+    }),
+    ...pender({
+      type: LOCAL_REGISTER,
+      onSuccess: (state, action) => state.set('result', Map(action.payload.data))
+    })
   },
   initialState
 );

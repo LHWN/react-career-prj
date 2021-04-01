@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styled from 'styled-components';
-import * as authActions from '../../redux/modules/auth';
 import { isEmail } from 'validator';
+import debounce from 'lodash/debounce';
+import * as authActions from '../../redux/modules/auth';
+import SignInError from '../../components/SignIn/SignInError';
 
 const InsertFormPositioner = styled.div`
   /* width: 100%; */
@@ -114,32 +116,52 @@ const RequestAccountLink = styled.div`
 `;
 
 class SignInForm extends Component {
-  // setError = (message) => {
-  //   const { AuthActions } = this.props;
-  //   AuthActions.setError({
-  //     form: 'login',
-  //     message
-  //   });
-  // };
+  setError = (message) => {
+    const { AuthActions } = this.props;
+    AuthActions.setError({
+      form: 'login',
+      message
+    });
+  };
 
-  // validate = {
-  //   email: (value) => {
-  //     if (!isEmail(value)) {
-  //       this.setError('잘못된 이메일 형식입니다.');
-  //       return false;
-  //     }
-  //     return true;
-  //   }
-  // };
+  validate = {
+    email: (value) => {
+      if (!isEmail(value)) {
+        this.setError('잘못된 이메일 형식입니다.');
+        return false;
+      }
+      return true;
+    }
+  };
+
+  /**
+   * debounce 라이브러리 : 특정 함수가 반복적으로 호출될 때 바로 실행하지 않고, 주어진 시간(ms)만큼 쉬어줘야 함수가 실행된다.
+   * 함수가 호출되면 300ms 이후에 실행되는데, 만일 그 사이에 새로운 함수가 또 호출되면 기존에 대기시켰던 호출을 없애고, 새로운 호출을 대기시킨다.
+   */
+  checkEmailExists = debounce(async (email) => {
+    console.log('checkEmailExists');
+    const { AuthActions } = this.props;
+    try {
+      await AuthActions.checkEmailExists(email);
+      if (this.props.exists.get('email')) {
+        this.setError('유효한 계정입니다.');
+      } else {
+        this.setError(null);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, 300);
 
   componentWillUnmount() {
-    const { AuthActions } = this.props.AuthActions;
+    const { AuthActions } = this.props;
+    console.log('componentWillUnmount');
     AuthActions.initializeForm('login');
   }
 
   handleChange = (e) => {
-    console.log('handleChange');
-    const AuthActions = this.props.AuthActions;
+    console.log(this.props);
+    const { AuthActions } = this.props;
     const { name, value } = e.target;
 
     AuthActions.changeInput({
@@ -149,13 +171,20 @@ class SignInForm extends Component {
     });
 
     // 검증 작업
-    // console.log(this.validate['email']);
-    // const validation = this.validate[name](value);
-    // if (!validation) return;
+    const validation = this.validate[name](value);
+    if (!validation) return;
+
+    // 이메일 존재여부 확인
+    const check = name === 'email' ? this.checkEmailExists : null;
+    check(value);
   };
 
   render() {
     const { handleChange } = this;
+    const { error } = this.props;
+
+    console.log('error:' + error);
+
     return (
       <InsertFormPositioner>
         <InsertFormContainer>
@@ -179,6 +208,7 @@ class SignInForm extends Component {
               Password
             </label>
             <input type="password" name="password" id="password" className="input-block" autocomplete="current-password" onChange={handleChange}></input>
+            {error && <SignInError>{error}</SignInError>}
             <a>SUBMIT</a>
           </InsertForm>
           <RequestAccountLink>
@@ -204,7 +234,10 @@ class SignInForm extends Component {
 
 export default connect(
   (state) => ({
-    form: state.auth.getIn(['login', 'form'])
+    form: state.auth.getIn(['login', 'form']),
+    error: state.auth.getIn(['login', 'error']),
+    exists: state.auth.getIn(['login', 'exists']),
+    result: state.auth.get('result')
   }),
   (dispatch) => ({
     AuthActions: bindActionCreators(authActions, dispatch)
