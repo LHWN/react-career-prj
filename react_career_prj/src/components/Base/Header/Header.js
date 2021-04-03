@@ -43,11 +43,18 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1
+  },
+  loggedIcon: {
+    // backgroundColor: black,
+    width: '5',
+    height: '5'
   }
 }));
 const Header = (props) => {
   const classes = useStyles();
-  console.log('2:' + props.open);
+  console.log('logged? : ' + props.logged);
+  console.log('loggedInfo? : ' + props.loggedUsername);
+  console.log('loggedThumbnail? : ' + props.loggedThumbnail);
   return (
     <>
       <CssBaseline />
@@ -64,10 +71,18 @@ const Header = (props) => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-
-          <IconButton color="inherit" component={RouterLink} to="/auth">
-            <AccountCircleIcon style={{ cursor: 'pointer' }}></AccountCircleIcon>
-          </IconButton>
+          {props.logged ? (
+            <div>
+              {props.loggedUsername}{' '}
+              <div className={classes.loggedIcon} onClick={props.handleLogout}>
+                Logout
+              </div>
+            </div>
+          ) : (
+            <IconButton color="inherit" component={RouterLink} to="/auth">
+              <AccountCircleIcon style={{ cursor: 'pointer' }}></AccountCircleIcon>
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
     </>

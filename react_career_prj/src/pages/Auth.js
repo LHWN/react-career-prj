@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import SignInWrapper from '../components/SignIn/SignInWrapper';
+import { SignInWrapper } from '../components/SignIn';
 import * as baseActions from '../redux/modules/base';
 
 class Auth extends Component {

@@ -2,7 +2,9 @@
 
 const storage = {
   set: (key, object) => {
+    console.log('stroage-set');
     if (!localStorage) return;
+    console.log('here');
     localStorage[key] = typeof obejct === 'string' ? object : JSON.stringify(object);
   },
   get: (key) => {

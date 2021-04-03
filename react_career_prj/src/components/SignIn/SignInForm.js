@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router-dom';
+
 import styled from 'styled-components';
-import { isEmail } from 'validator';
 import debounce from 'lodash/debounce';
+import queryString from 'query-string';
+import { ContactSupportOutlined } from '@material-ui/icons';
+
+import { isEmail } from 'validator';
+import storage from '../../lib/storage';
 import * as authActions from '../../redux/modules/auth';
+import * as userActions from '../../redux/modules/user';
 import SignInError from '../../components/SignIn/SignInError';
 
 const InsertFormPositioner = styled.div`
@@ -115,6 +122,21 @@ const RequestAccountLink = styled.div`
   }
 `;
 
+const LoginButton = styled.div`
+  background-color: #2ea44f;
+  text-align: center;
+  color: #fff;
+  padding: 5px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid;
+  border-radius: 6px;
+`;
+
 class SignInForm extends Component {
   setError = (message) => {
     const { AuthActions } = this.props;
@@ -139,7 +161,6 @@ class SignInForm extends Component {
    * 함수가 호출되면 300ms 이후에 실행되는데, 만일 그 사이에 새로운 함수가 또 호출되면 기존에 대기시켰던 호출을 없애고, 새로운 호출을 대기시킨다.
    */
   checkEmailExists = debounce(async (email) => {
-    console.log('checkEmailExists');
     const { AuthActions } = this.props;
     try {
       await AuthActions.checkEmailExists(email);
@@ -153,9 +174,17 @@ class SignInForm extends Component {
     }
   }, 300);
 
+  componentDidMount() {
+    const { location } = this.props;
+    const query = queryString.parse(location.search);
+
+    if (query.expired !== undefined) {
+      this.setError('세션이 만료되었습니다. 다시 로그인하세요.');
+    }
+  }
+
   componentWillUnmount() {
     const { AuthActions } = this.props;
-    console.log('componentWillUnmount');
     AuthActions.initializeForm('login');
   }
 
@@ -171,16 +200,38 @@ class SignInForm extends Component {
     });
 
     // 검증 작업
-    const validation = this.validate[name](value);
-    if (!validation) return;
+    if (name === 'email') {
+      const validation = this.validate[name](value);
+      if (!validation) return;
+    }
 
     // 이메일 존재여부 확인
-    const check = name === 'email' ? this.checkEmailExists : null;
+    const check = name === 'email' ? this.checkEmailExists : () => {};
     check(value);
   };
 
+  handleLocalLogin = async () => {
+    const { form, AuthActions, UserActions, history } = this.props;
+    const { email, password } = form.toJS();
+
+    console.log('input acc' + email + password);
+    console.log('this.props' + JSON.stringify(this.props));
+
+    try {
+      await AuthActions.localLogin({ email, password });
+      const loggedInfo = this.props.result.toJS();
+
+      UserActions.setLoggedInfo(loggedInfo);
+      history.push('/');
+      storage.set('loggedInfo', loggedInfo);
+    } catch (e) {
+      console.log('login error!');
+      this.setError('잘못된 계정입니다.');
+    }
+  };
+
   render() {
-    const { handleChange } = this;
+    const { handleChange, handleLocalLogin } = this;
     const { error } = this.props;
 
     console.log('error:' + error);
@@ -209,7 +260,7 @@ class SignInForm extends Component {
             </label>
             <input type="password" name="password" id="password" className="input-block" autocomplete="current-password" onChange={handleChange}></input>
             {error && <SignInError>{error}</SignInError>}
-            <a>SUBMIT</a>
+            <LoginButton onClick={handleLocalLogin}>Sign in</LoginButton>
           </InsertForm>
           <RequestAccountLink>
             <p className="mediumText">Do you want to see my career?</p>
@@ -232,14 +283,30 @@ class SignInForm extends Component {
   }
 }
 
-export default connect(
-  (state) => ({
-    form: state.auth.getIn(['login', 'form']),
-    error: state.auth.getIn(['login', 'error']),
-    exists: state.auth.getIn(['login', 'exists']),
-    result: state.auth.get('result')
-  }),
-  (dispatch) => ({
-    AuthActions: bindActionCreators(authActions, dispatch)
-  })
-)(SignInForm);
+// export default connect(
+//   (state) => ({
+//     form: state.auth.getIn(['login', 'form']),
+//     error: state.auth.getIn(['login', 'error']),
+//     exists: state.auth.getIn(['login', 'exists']),
+//     result: state.auth.get('result')
+//   }),
+//   (dispatch) => ({
+//     AuthActions: bindActionCreators(authActions, dispatch),
+//     UserActions: bindActionCreators(userActions, dispatch)
+//   })
+// )(SignInForm);
+
+export default withRouter(
+  connect(
+    (state) => ({
+      form: state.auth.getIn(['login', 'form']),
+      error: state.auth.getIn(['login', 'error']),
+      exists: state.auth.getIn(['login', 'exists']),
+      result: state.auth.get('result')
+    }),
+    (dispatch) => ({
+      AuthActions: bindActionCreators(authActions, dispatch),
+      UserActions: bindActionCreators(userActions, dispatch)
+    })
+  )(SignInForm)
+);
