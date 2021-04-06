@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, makeStyles } from '@material-ui/core';
+import { AppBar, ListItemIcon, makeStyles } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,6 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Avatar from '@material-ui/core/Avatar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { withStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -43,18 +49,50 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1
-  },
-  loggedIcon: {
-    // backgroundColor: black,
-    width: '5',
-    height: '5'
   }
 }));
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5'
+  }
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center'
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center'
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white
+      }
+    }
+  }
+}))(MenuItem);
+
 const Header = (props) => {
   const classes = useStyles();
-  console.log('logged? : ' + props.logged);
-  console.log('loggedInfo? : ' + props.loggedUsername);
-  console.log('loggedThumbnail? : ' + props.loggedThumbnail);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <>
       <CssBaseline />
@@ -72,12 +110,23 @@ const Header = (props) => {
             </Badge>
           </IconButton>
           {props.logged ? (
-            <div>
-              {props.loggedUsername}{' '}
-              <div className={classes.loggedIcon} onClick={props.handleLogout}>
-                Logout
-              </div>
-            </div>
+            <>
+              <Avatar alt="thumbnail" src={props.loggedThumbnail} onClick={handleClick} />
+              <StyledMenu id="userMenu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
+                <StyledMenuItem onClick={props.handleLogout}>
+                  <ListItemIcon>
+                    <ExitToAppIcon fontsize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </StyledMenuItem>
+                <StyledMenuItem>
+                  <ListItemIcon>
+                    <ExitToAppIcon fontsize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="..." />
+                </StyledMenuItem>
+              </StyledMenu>
+            </>
           ) : (
             <IconButton color="inherit" component={RouterLink} to="/auth">
               <AccountCircleIcon style={{ cursor: 'pointer' }}></AccountCircleIcon>
