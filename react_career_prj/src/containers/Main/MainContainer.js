@@ -50,4 +50,8 @@ const ChartContainer = () => {
   );
 };
 
-export default ChartContainer;
+const MainContainer = () => {
+  return <ChartContainer></ChartContainer>;
+};
+
+export default MainContainer;

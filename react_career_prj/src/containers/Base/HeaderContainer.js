@@ -7,7 +7,7 @@ import Header from '../../components/Base/Header';
 import storage from '../../lib/storage';
 
 const HeaderContainer = (props) => {
-  const { visible, open, UserActions, user } = props;
+  const { visible, open, UserActions, user, useStyles } = props;
 
   const handleLogout = async () => {
     try {
@@ -28,6 +28,7 @@ const HeaderContainer = (props) => {
       open={open}
       handleDrawerOpen={handleDrawerOpen}
       handleLogout={handleLogout}
+      useStyles={useStyles}
       logged={user.get('logged')}
       loggedUsername={user.getIn(['loggedInfo', 'username'])}
       loggedThumbnail={user.getIn(['loggedInfo', 'thumbnail'])}
