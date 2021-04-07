@@ -1,12 +1,12 @@
 import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+
 import Title from './Title';
 
-// Generate Sales Data
-function createData(time, amount) {
+const createData = (time, amount) => {
   return { time, amount };
-}
+};
 
 const data = [
   createData('00:00', 0),
@@ -42,7 +42,6 @@ export default function Chart() {
               Sales ($)
             </Label>
           </YAxis>
-          <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </React.Fragment>

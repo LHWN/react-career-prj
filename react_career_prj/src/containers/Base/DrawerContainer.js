@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(7),
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9)
-    },
-    whiteSpace: 'nowrap'
+    }
+    // whiteSpace: 'nowrap'
   },
   drawerPaper: {
     position: 'relative',
@@ -46,13 +46,15 @@ const DrawerContainer = (props) => {
   const { visible } = props;
   const classes = useStyles();
 
+  console.log('open:' + props.open);
+
   if (!visible) return null;
   return (
     <Drawer
       variant="permanent"
       classes={{
-        // paper: clsx(classes.drawerPaper, !props.open && classes.drawerPaperClose)
-        paper: clsx(classes.drawerPaperClose, props.open && classes.drawerPaper)
+        paper: clsx(classes.drawerPaper, !props.open && classes.drawerPaperClose)
+        // paper: clsx(classes.drawerPaperClose, props.open && classes.drawerPaper)
       }}
       open={props.open}
     >

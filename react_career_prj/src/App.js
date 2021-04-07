@@ -9,8 +9,9 @@ import { CssBaseline, makeStyles } from '@material-ui/core';
 import { Home, Auth } from './pages';
 import Homepage from './components/Home';
 import SignIn from './components/SignIn/SignInWrapper';
-import HeaderContainer from './containers/Base/HeaderContainer';
-import DrawerContainer from './containers/Base/DrawerContainer';
+import { HeaderContainer } from './containers/Base';
+import { DrawerContainer } from './containers/Base';
+import { MainContainer as Main } from './containers/Main';
 import storage from './lib/storage';
 
 function App(props) {
@@ -56,7 +57,7 @@ function App(props) {
         <DrawerContainer open={open} handleDrawerClose={handleDrawerClose}></DrawerContainer>
       </div>
       <Route path="/auth" component={Auth} />
-      {/* <Route path="/" component={Homepage} exact /> */}
+      <Route path="/" component={Main} exact />
       <Route path="/signIn" component={SignIn} />
       <Route exact path="/homepage" component={Homepage} />
     </div>

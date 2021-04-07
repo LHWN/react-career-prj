@@ -1,7 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Link as RouterLink } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -12,7 +10,6 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -21,12 +18,10 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-
 import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-import SignIn from './SignIn/SignInWrapper';
 
 function Copyright() {
   return (
@@ -133,8 +128,6 @@ export default function Dashboard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  const loginButton = {};
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -144,20 +137,15 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            매일 매일, 꾸준히
+            Dashboard
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
-
-          <IconButton color="inherit" component={RouterLink} to="/signIn">
-            <AccountCircleIcon style={{ cursor: 'pointer' }}></AccountCircleIcon>
-          </IconButton>
         </Toolbar>
       </AppBar>
-
       <Drawer
         variant="permanent"
         classes={{
