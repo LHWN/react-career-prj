@@ -132,9 +132,9 @@ function App(props) {
         <CssBaseline />
         <HeaderContainer open={open} useStyles={useStyles} handleDrawerOpen={handleDrawerOpen}></HeaderContainer>
         <DrawerContainer open={open} useStyles={useStyles} handleDrawerClose={handleDrawerClose}></DrawerContainer>
+        <Route path="/" component={Main} exact />
       </div>
       <Route path="/auth" component={Auth} />
-      <Route path="/" component={Main} exact />
       <Route path="/signIn" component={SignIn} />
       <Route exact path="/homepage" component={Homepage} />
     </div>

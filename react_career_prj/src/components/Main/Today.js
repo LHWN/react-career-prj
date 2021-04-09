@@ -1,12 +1,13 @@
 import React from 'react';
+
+import { makeStyles, Typography } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+
 import Title from './Title';
 
-function preventDefault(event) {
+const preventDefault = (event) => {
   event.preventDefault();
-}
+};
 
 const useStyles = makeStyles({
   depositContext: {
@@ -14,22 +15,29 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Deposits() {
+const Today = () => {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
+      <Title>Today</Title>
       <Typography component="p" variant="h4">
-        $3,024.00
+        {/* dday 가져오기 */}D + 10
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on 15 March, 2019
+        {/* 오늘 날짜 가져오기 */}
+        {'on 9, '}
+        {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][new Date().getMonth()]}
+        {' ,'}
+        {new Date().getFullYear()}
       </Typography>
+      {/* 클릭 구현할거 생각하기 */}
       <div>
         <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
+          Click here.
         </Link>
       </div>
     </React.Fragment>
   );
-}
+};
+
+export default Today;
