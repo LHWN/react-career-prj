@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { StaticRouter } from 'react-router';
 import { bindActionCreators } from 'redux';
 import * as userActions from '../../redux/modules/user';
 import Header from '../../components/Base/Header';
@@ -19,7 +18,8 @@ const HeaderContainer = (props) => {
     storage.remove('loggedInfo');
     window.location.href = '/'; // 홈페이지로 새로고침
   };
-
+  console.log(user.getIn(['loggedInfo', 'username']));
+  console.log('UserActions' + JSON.stringify(user));
   if (!visible) return null;
   const handleDrawerOpen = props.handleDrawerOpen;
 

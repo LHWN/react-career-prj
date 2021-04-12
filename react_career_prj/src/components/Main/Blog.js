@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { makeStyles } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
@@ -9,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
 
 import Title from './Title';
+import * as crawlActions from '../../redux/modules/crawl';
 
 // Generate Post Data
 const createData = (id, data, category, title, author, hits) => {
@@ -34,8 +37,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Blog = () => {
+const Blog = (props) => {
   const classes = useStyles();
+  const { posts, CrawlActions } = props;
+
+  console.log('CrawlActions' + JSON.stringify(posts));
   return (
     <React.Fragment>
       <Title>Recent Blog Posts</Title>
@@ -71,4 +77,11 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default connect(
+  (state) => ({
+    posts: state.crawl
+  }),
+  (dispatch) => ({
+    CrawlActions: bindActionCreators(crawlActions, dispatch)
+  })
+)(Blog);
