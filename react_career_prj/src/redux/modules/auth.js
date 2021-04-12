@@ -63,7 +63,6 @@ export default handleActions(
     },
     [INITIALIZE_FORM]: (state, action) => {
       const initialForm = initialState.get(action.payload);
-      console.log('initiallizeForm');
       return state.set(action.payload, initialForm);
     },
     [SET_ERROR]: (state, action) => {

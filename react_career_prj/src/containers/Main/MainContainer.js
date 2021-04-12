@@ -31,7 +31,10 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     overflow: 'auto'
   },
-  appBarSpacer: theme.mixins.toolbar
+  appBarSpacer: theme.mixins.toolbar,
+  seeMore: {
+    marginTop: theme.spacing(3)
+  }
 }));
 
 const MainContainer = () => {

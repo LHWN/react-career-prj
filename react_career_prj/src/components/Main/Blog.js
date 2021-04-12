@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -12,6 +12,7 @@ import Table from '@material-ui/core/Table';
 
 import Title from './Title';
 import * as crawlActions from '../../redux/modules/crawl';
+import { ContactSupportOutlined } from '@material-ui/icons';
 
 // Generate Post Data
 const createData = (id, data, category, title, author, hits) => {
@@ -41,7 +42,19 @@ const Blog = (props) => {
   const classes = useStyles();
   const { posts, CrawlActions } = props;
 
-  console.log('CrawlActions' + JSON.stringify(posts));
+  const getBlogPosts = async () => {
+    try {
+      await CrawlActions.getBlogPosts();
+      console.log('Blog.js posts' + posts[1]);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getBlogPosts();
+  }, []);
+
   return (
     <React.Fragment>
       <Title>Recent Blog Posts</Title>
