@@ -11,10 +11,10 @@ export const getBlogPosts = createAction(GET_BLOG_POSTS, CrawlAPI.getBlogPosts);
 const initialState = Map({
   blogPosts: List([
     Map({
-      date: null,
-      category: null,
-      title: null,
-      author: null,
+      date: '',
+      category: '',
+      title: '',
+      author: '',
       hits: 0
     })
   ])
@@ -26,10 +26,29 @@ export default handleActions(
       type: GET_BLOG_POSTS,
       onSuccess: (state, action) => {
         const blogPosts = state.get('blogPosts');
-        console.log('inner success');
+        console.log('inner success' + action.payload.data.length);
 
-        // state.set('blogPosts', Map(action.payload.data));
-        state.set('blogPosts', blogPosts.push(Map({})));
+        blogPosts.clear();
+        console.log('blogPosts_before' + JSON.stringify(blogPosts.toJS()));
+        console.log('isList?' + List.isList(blogPosts));
+        console.log('test size' + List([1, 2, 3, 4]).push(5).push(6).size);
+        console.log('isList?' + List.isList(List([1, 2, 3, 4])));
+
+        console.log(blogPosts.clear().toJSON());
+
+        console.log('blogPosts_after' + blogPosts.toJSON());
+
+        action.payload.data.forEach((el) => {
+          blogPosts.push(
+            Map({
+              date: el.date,
+              category: el.category,
+              title: el.title,
+              author: el.author,
+              hits: el.hits
+            })
+          );
+        });
       },
       onFailure: (state, action) => {
         console.log('inner failure');

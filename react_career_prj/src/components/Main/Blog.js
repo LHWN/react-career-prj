@@ -45,7 +45,7 @@ const Blog = (props) => {
   const getBlogPosts = async () => {
     try {
       await CrawlActions.getBlogPosts();
-      console.log('Blog.js posts' + posts[1]);
+      console.log('Blog.js posts' + posts);
     } catch (e) {
       console.log(e);
     }
@@ -92,7 +92,7 @@ const Blog = (props) => {
 
 export default connect(
   (state) => ({
-    posts: state.crawl
+    posts: state.crawl.get('blogPosts')
   }),
   (dispatch) => ({
     CrawlActions: bindActionCreators(crawlActions, dispatch)
