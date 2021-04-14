@@ -12,7 +12,6 @@ import Table from '@material-ui/core/Table';
 
 import Title from './Title';
 import * as crawlActions from '../../redux/modules/crawl';
-import { ContactSupportOutlined } from '@material-ui/icons';
 
 // Generate Post Data
 const createData = (id, data, category, title, author, hits) => {
@@ -42,10 +41,13 @@ const Blog = (props) => {
   const classes = useStyles();
   const { posts, CrawlActions } = props;
 
-  const getBlogPosts = async () => {
+  const getBlogPosts = () => {
+    console.log('getblogPosts' + posts.get('blogPosts'));
     try {
-      await CrawlActions.getBlogPosts();
-      console.log('Blog.js posts' + posts);
+      // await CrawlActions.getBlogPosts();
+      console.log('test 호출');
+      // console.log('Blog.js posts' + posts.get('blogPosts'));
+      // console.log('Blog.js Crawl' + JSON.stringify(CrawlActions));
     } catch (e) {
       console.log(e);
     }
@@ -53,7 +55,7 @@ const Blog = (props) => {
 
   useEffect(() => {
     getBlogPosts();
-  }, []);
+  });
 
   return (
     <React.Fragment>
@@ -92,7 +94,7 @@ const Blog = (props) => {
 
 export default connect(
   (state) => ({
-    posts: state.crawl.get('blogPosts')
+    posts: state.crawl
   }),
   (dispatch) => ({
     CrawlActions: bindActionCreators(crawlActions, dispatch)

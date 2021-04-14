@@ -18,6 +18,7 @@ const HeaderContainer = (props) => {
     storage.remove('loggedInfo');
     window.location.href = '/'; // 홈페이지로 새로고침
   };
+
   if (!visible) return null;
   const handleDrawerOpen = props.handleDrawerOpen;
 

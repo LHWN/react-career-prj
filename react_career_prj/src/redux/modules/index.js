@@ -8,8 +8,8 @@ import { penderReducer } from 'redux-pender';
 
 export default combineReducers({
   base,
+  crawl,
   auth,
   user,
-  crawl,
   pender: penderReducer
 });
