@@ -41,13 +41,9 @@ const Blog = (props) => {
   const classes = useStyles();
   const { posts, CrawlActions } = props;
 
-  const getBlogPosts = () => {
-    console.log('getblogPosts' + posts.get('blogPosts'));
+  const getBlogPosts = async () => {
     try {
-      // await CrawlActions.getBlogPosts();
-      console.log('test 호출');
-      // console.log('Blog.js posts' + posts.get('blogPosts'));
-      // console.log('Blog.js Crawl' + JSON.stringify(CrawlActions));
+      await CrawlActions.getBlogPosts();
     } catch (e) {
       console.log(e);
     }
@@ -55,6 +51,14 @@ const Blog = (props) => {
 
   useEffect(() => {
     getBlogPosts();
+  }, []);
+
+  console.log('state' + posts.get('blogPosts'));
+
+  const blogPosts = posts.get('blogPosts');
+  let postRows = null;
+  blogPosts.forEach((el, i) => {
+    console.log(el.date + i);
   });
 
   return (
@@ -71,7 +75,7 @@ const Blog = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {/* {rows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.date}</TableCell>
               <TableCell>{row.category}</TableCell>
@@ -79,7 +83,16 @@ const Blog = (props) => {
               <TableCell>{row.author}</TableCell>
               <TableCell>{row.hits}</TableCell>
             </TableRow>
-          ))}
+          ))} */}
+          {blogPosts.forEach((el, i) => {
+            <TableRow key={i}>
+              <TableCell>{el.date}</TableCell>
+              <TableCell>{el.category}</TableCell>
+              <TableCell>{el.title}</TableCell>
+              <TableCell>{el.author}</TableCell>
+              <TableCell>{el.hits}</TableCell>
+            </TableRow>;
+          })}
         </TableBody>
       </Table>
       {/* button 생각해보기 */}

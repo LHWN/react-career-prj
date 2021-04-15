@@ -8,29 +8,24 @@ const GET_BLOG_POSTS = 'crawl/GET_BLOG_POSTS'; // 블로그 포스트 정보 가
 
 export const getBlogPosts = createAction(GET_BLOG_POSTS, CrawlAPI.getBlogPosts);
 
-// const initialState = Map({
-//   blogPosts: List([
-//     Map({
-//       date: null,
-//       category: null,
-//       title: null,
-//       author: null,
-//       hits: 0
-//     })
-//   ])
-// });
-
 const initialState = Map({
-  blogPosts: false
+  blogPosts: List([
+    Map({
+      date: '',
+      category: '',
+      title: '',
+      author: '',
+      hits: 0
+    })
+  ])
 });
 
 export default handleActions(
   {
-    // [GET_BLOG_POSTS]: (state, action) => state.set('blogPosts', true)
     ...pender({
       type: GET_BLOG_POSTS,
       onSuccess: (state, action) => {
-        state.set('blogPosts', true);
+        return state.set('blogPosts', action.payload.data);
       },
       onFailure: (state, action) => {
         console.log('onFailure');

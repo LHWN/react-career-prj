@@ -3,7 +3,6 @@ import { Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as userActions from './redux/modules/user';
-import * as crawlActions from './redux/modules/crawl';
 import clsx from 'clsx';
 
 import { CssBaseline, makeStyles } from '@material-ui/core';
@@ -12,7 +11,7 @@ import Homepage from './components/Home';
 import SignIn from './components/SignIn/SignInWrapper';
 import { HeaderContainer } from './containers/Base';
 import { DrawerContainer } from './containers/Base';
-import { MainContainer } from './containers/Main';
+import { MainContainer as Main } from './containers/Main';
 import storage from './lib/storage';
 
 const drawerWidth = 240;
@@ -98,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App(props) {
   const [open, setOpen] = React.useState(false);
-  const { UserActions, CrawlActions, crawl } = props;
+  const { UserActions } = props;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -109,7 +108,6 @@ function App(props) {
 
   // App 이 불러와졌을 때 로컬스토리지에 있던 유저 정보를 사용
   const initializeUserInfo = async () => {
-    console.log('initialUserInfo');
     const loggedInfo = storage.get('loggedInfo'); // 로그인 정보를 로컬 스토리지에서 가져온다.
     if (!loggedInfo) return; // 로그인 정보가 없으면 여기서 멈춘다.
 
@@ -117,7 +115,6 @@ function App(props) {
     UserActions.setLoggedInfo(loggedInfo);
     try {
       await UserActions.checkStatus();
-      await CrawlActions.getBlogPosts();
     } catch (e) {
       storage.remove('loggedInfo');
       window.location.href = '/auth/login?expired';
@@ -135,8 +132,7 @@ function App(props) {
         <CssBaseline />
         <HeaderContainer open={open} useStyles={useStyles} handleDrawerOpen={handleDrawerOpen}></HeaderContainer>
         <DrawerContainer open={open} useStyles={useStyles} handleDrawerClose={handleDrawerClose}></DrawerContainer>
-        <MainContainer></MainContainer>
-        {/* <Route path="/" component={Main} exact /> */}
+        <Route path="/" component={Main} exact />
       </div>
       <Route path="/auth" component={Auth} />
       <Route path="/signIn" component={SignIn} />
@@ -145,12 +141,6 @@ function App(props) {
   );
 }
 
-export default connect(
-  (state) => ({
-    blogPosts: state.crawl
-  }),
-  (dispatch) => ({
-    UserActions: bindActionCreators(userActions, dispatch),
-    CrawlActions: bindActionCreators(crawlActions, dispatch)
-  })
-)(App);
+export default connect(null, (dispatch) => ({
+  UserActions: bindActionCreators(userActions, dispatch)
+}))(App);

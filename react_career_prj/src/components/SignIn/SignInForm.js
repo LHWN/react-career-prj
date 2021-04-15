@@ -189,7 +189,6 @@ class SignInForm extends Component {
   }
 
   handleChange = (e) => {
-    console.log(this.props);
     const { AuthActions } = this.props;
     const { name, value } = e.target;
 
