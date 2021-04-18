@@ -13,20 +13,6 @@ import Table from '@material-ui/core/Table';
 import Title from './Title';
 import * as crawlActions from '../../redux/modules/crawl';
 
-// Generate Post Data
-const createData = (id, data, category, title, author, hits) => {
-  return { id, data, category, title, author, hits };
-};
-
-const rows = [
-  createData(0, '09 April, 2021', 'IT > React', 'useMemo 사용해보기', 'LHWN', 36),
-  createData(1, '09 April, 2021', 'IT > React', 'useMemo 사용해보기', 'LHWN', 36),
-  createData(2, '09 April, 2021', 'IT > React', 'useMemo 사용해보기', 'LHWN', 36),
-  createData(3, '09 April, 2021', 'IT > React', 'useMemo 사용해보기', 'LHWN', 36),
-  createData(4, '09 April, 2021', 'IT > React', 'useMemo 사용해보기', 'LHWN', 36),
-  createData(5, '09 April, 2021', 'IT > React', 'useMemo 사용해보기', 'LHWN', 36)
-];
-
 const preventDefault = (event) => {
   event.preventDefault();
 };
@@ -53,13 +39,8 @@ const Blog = (props) => {
     getBlogPosts();
   }, []);
 
-  console.log('state' + posts.get('blogPosts'));
-
   const blogPosts = posts.get('blogPosts');
   let postRows = null;
-  blogPosts.forEach((el, i) => {
-    console.log(el.date + i);
-  });
 
   return (
     <React.Fragment>
@@ -75,24 +56,15 @@ const Blog = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.category}</TableCell>
-              <TableCell>{row.title}</TableCell>
-              <TableCell>{row.author}</TableCell>
-              <TableCell>{row.hits}</TableCell>
-            </TableRow>
-          ))} */}
-          {blogPosts.forEach((el, i) => {
-            <TableRow key={i}>
+          {blogPosts.map((el) => (
+            <TableRow>
               <TableCell>{el.date}</TableCell>
               <TableCell>{el.category}</TableCell>
               <TableCell>{el.title}</TableCell>
               <TableCell>{el.author}</TableCell>
               <TableCell>{el.hits}</TableCell>
-            </TableRow>;
-          })}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       {/* button 생각해보기 */}
