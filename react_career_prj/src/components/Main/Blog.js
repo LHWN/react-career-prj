@@ -9,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
+import Avatar from '@material-ui/core/Avatar';
 
 import Title from './Title';
 import * as crawlActions from '../../redux/modules/crawl';
@@ -20,6 +21,23 @@ const preventDefault = (event) => {
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3)
+  },
+  authorContainer: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  profile: {
+    width: 30,
+    height: 30,
+    marginRight: 4
+  },
+  author: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  table: {
+    textAlign: 'center'
   }
 }));
 
@@ -48,21 +66,22 @@ const Blog = (props) => {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Category</TableCell>
-            <TableCell>Title</TableCell>
-            <TableCell>Author</TableCell>
-            <TableCell>Hits</TableCell>
+            <TableCell className={classes.table}>Date</TableCell>
+            <TableCell className={classes.table}>Category</TableCell>
+            <TableCell className={classes.table}>Title</TableCell>
+            <TableCell className={classes.table}>Author</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {blogPosts.map((el) => (
             <TableRow>
-              <TableCell>{el.date}</TableCell>
-              <TableCell>{el.category}</TableCell>
-              <TableCell>{el.title}</TableCell>
-              <TableCell>{el.author}</TableCell>
-              <TableCell>{el.hits}</TableCell>
+              <TableCell className={classes.table}>{el.date}</TableCell>
+              <TableCell className={classes.table}>{el.category}</TableCell>
+              <TableCell className={classes.table}>{el.title}</TableCell>
+              <TableCell className={classes.authorContainer}>
+                <Avatar alt="profile" src={el.profile} className={classes.profile}></Avatar>
+                <span className={classes.author}>{el.author}</span>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

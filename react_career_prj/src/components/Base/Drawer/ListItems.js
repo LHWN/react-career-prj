@@ -31,7 +31,6 @@ export const mainListItems = (
       <ListItemText primary="경력사항" secondary="Work Experience" />
     </ListItem>
     <ListItem button>
-      0
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
