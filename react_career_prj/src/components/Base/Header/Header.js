@@ -19,39 +19,6 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const drawerWidth = 240;
 
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     display: 'flex'
-//   },
-//   toolbar: {
-//     paddingRight: 24 // keep right padding when drawer closed
-//   },
-//   appBar: {
-//     zIndex: theme.zIndex.drawer + 1,
-//     transition: theme.transitions.create(['width', 'margin'], {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.leavingScreen
-//     })
-//   },
-//   appBarShift: {
-//     marginLeft: drawerWidth,
-//     width: `calc(100% - ${drawerWidth}px)`,
-//     transition: theme.transitions.create(['width', 'margin'], {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.enteringScreen
-//     })
-//   },
-//   menuButton: {
-//     marginRight: 36
-//   },
-//   menuButtonHidden: {
-//     display: 'none'
-//   },
-//   title: {
-//     flexGrow: 1
-//   }
-// }));
-
 const StyledMenu = withStyles({
   paper: {
     border: '1px solid #d3d4d5'

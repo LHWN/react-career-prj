@@ -21,7 +21,7 @@ const HeaderContainer = (props) => {
 
   if (!visible) return null;
   const handleDrawerOpen = props.handleDrawerOpen;
-
+  console.log('thumb' + user.get('loggedInfo'));
   return (
     <Header
       open={open}

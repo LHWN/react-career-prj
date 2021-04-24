@@ -33,9 +33,7 @@ export default handleActions(
     [SET_VALIDATED]: (state, action) => state.set('validated', action.payload),
     ...pender({
       type: CHECK_STATUS,
-      onSuccess: (state, action) => {
-        state.set('loggedInfo', Map(action.payload.data)).set('validated', true);
-      },
+      onSuccess: (state, action) => state.set('loggedInfo', Map(action.payload.data)).set('validated', true),
       onFailure: (state, action) => initialState
     })
   },

@@ -13,6 +13,7 @@ import { HeaderContainer } from './containers/Base';
 import { DrawerContainer } from './containers/Base';
 import { MainContainer as Main } from './containers/Main';
 import storage from './lib/storage';
+import { SatelliteTwoTone } from '@material-ui/icons';
 
 const drawerWidth = 240;
 
@@ -111,7 +112,6 @@ function App(props) {
     const loggedInfo = storage.get('loggedInfo'); // 로그인 정보를 로컬 스토리지에서 가져온다.
     if (!loggedInfo) return; // 로그인 정보가 없으면 여기서 멈춘다.
 
-    // const { UserActions } = this.props;
     UserActions.setLoggedInfo(loggedInfo);
     try {
       await UserActions.checkStatus();

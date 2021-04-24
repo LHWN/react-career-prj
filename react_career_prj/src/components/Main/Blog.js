@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import clsx from 'clsx';
 
 import { makeStyles } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
@@ -38,12 +39,31 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     textAlign: 'center'
+  },
+  blurEffect: {
+    filter: 'blur(3px)',
+    /**
+     * Cross Browsing 을 위한 처리
+     */
+    '-webkit-filter': 'blur(3px)',
+    '-moz-filter': 'blur(3px)',
+    '-o-filter': 'blur(3px)',
+    '-ms-filter': 'blur(3px)'
+  },
+  noBlurEffect: {
+    position: 'relative'
+  },
+  signInText: {
+    position: 'absolute'
   }
 }));
 
 const Blog = (props) => {
   const classes = useStyles();
-  const { posts, CrawlActions } = props;
+  const { posts, user, CrawlActions } = props;
+  const blogPosts = posts.get('blogPosts');
+  const logged = user.get('logged');
+  let postRows = null;
 
   const getBlogPosts = async () => {
     try {
@@ -57,35 +77,35 @@ const Blog = (props) => {
     getBlogPosts();
   }, []);
 
-  const blogPosts = posts.get('blogPosts');
-  let postRows = null;
-
   return (
     <React.Fragment>
       <Title>Recent Blog Posts</Title>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell className={classes.table}>Date</TableCell>
-            <TableCell className={classes.table}>Category</TableCell>
-            <TableCell className={classes.table}>Title</TableCell>
-            <TableCell className={classes.table}>Author</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {blogPosts.map((el) => (
+      <div id="tableContainer">
+        <Table size="small" className={clsx(logged ? classes.noBlurEffect : classes.blurEffect)}>
+          <TableHead>
             <TableRow>
-              <TableCell className={classes.table}>{el.date}</TableCell>
-              <TableCell className={classes.table}>{el.category}</TableCell>
-              <TableCell className={classes.table}>{el.title}</TableCell>
-              <TableCell className={classes.authorContainer}>
-                <Avatar alt="profile" src={el.profile} className={classes.profile}></Avatar>
-                <span className={classes.author}>{el.author}</span>
-              </TableCell>
+              <TableCell className={classes.table}>Date</TableCell>
+              <TableCell className={classes.table}>Category</TableCell>
+              <TableCell className={classes.table}>Title</TableCell>
+              <TableCell className={classes.table}>Author</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {blogPosts.map((el) => (
+              <TableRow>
+                <TableCell className={classes.table}>{el.date}</TableCell>
+                <TableCell className={classes.table}>{el.category}</TableCell>
+                <TableCell className={classes.table}>{el.title}</TableCell>
+                <TableCell className={classes.authorContainer}>
+                  <Avatar alt="profile" src={el.profile} className={classes.profile}></Avatar>
+                  <span className={classes.author}>{el.author}</span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <div classesName={classes.signInText}>login!</div>
+      </div>
       {/* button 생각해보기 */}
       <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>
@@ -98,7 +118,8 @@ const Blog = (props) => {
 
 export default connect(
   (state) => ({
-    posts: state.crawl
+    posts: state.crawl,
+    user: state.user
   }),
   (dispatch) => ({
     CrawlActions: bindActionCreators(crawlActions, dispatch)
