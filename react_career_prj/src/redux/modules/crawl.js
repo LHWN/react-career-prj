@@ -14,6 +14,7 @@ const initialState = Map({
       date: '',
       category: '',
       title: '',
+      url: '',
       profile: '',
       author: ''
     })

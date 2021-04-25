@@ -11,6 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Table from '@material-ui/core/Table';
 import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
 
 import Title from './Title';
 import * as crawlActions from '../../redux/modules/crawl';
@@ -50,11 +51,23 @@ const useStyles = makeStyles((theme) => ({
     '-o-filter': 'blur(3px)',
     '-ms-filter': 'blur(3px)'
   },
-  noBlurEffect: {
-    position: 'relative'
+  tableContainer: {
+    display: 'block',
+    position: 'relative',
+    zIndex: 1
   },
-  signInText: {
-    position: 'absolute'
+  signInTextContainer: {
+    position: 'absolute',
+    zIndex: 2,
+    left: '50%',
+    top: '50%',
+    fontSize: '20px',
+    transform: 'translate(-50%, -50%)'
+  },
+  link: {
+    '&: hover': {
+      // decora
+    }
   }
 }));
 
@@ -80,8 +93,8 @@ const Blog = (props) => {
   return (
     <React.Fragment>
       <Title>Recent Blog Posts</Title>
-      <div id="tableContainer">
-        <Table size="small" className={clsx(logged ? classes.noBlurEffect : classes.blurEffect)}>
+      <div id="tableContainer" className={classes.tableContainer}>
+        <Table size="small" className={clsx(logged ? null : classes.blurEffect)}>
           <TableHead>
             <TableRow>
               <TableCell className={classes.table}>Date</TableCell>
@@ -95,7 +108,11 @@ const Blog = (props) => {
               <TableRow>
                 <TableCell className={classes.table}>{el.date}</TableCell>
                 <TableCell className={classes.table}>{el.category}</TableCell>
-                <TableCell className={classes.table}>{el.title}</TableCell>
+                <TableCell className={clsx(classes.table, classes.link)}>
+                  <Link color="inherit" onClick={() => window.open(el.url, '_blank')}>
+                    {el.title}
+                  </Link>
+                </TableCell>
                 <TableCell className={classes.authorContainer}>
                   <Avatar alt="profile" src={el.profile} className={classes.profile}></Avatar>
                   <span className={classes.author}>{el.author}</span>
@@ -104,7 +121,13 @@ const Blog = (props) => {
             ))}
           </TableBody>
         </Table>
-        <div classesName={classes.signInText}>login!</div>
+        {logged ? null : (
+          <div className={classes.signInTextContainer}>
+            <Typography component="h2" variant="h6" color="primary" gutterBottom>
+              You need to Sign in to see it.
+            </Typography>
+          </div>
+        )}
       </div>
       {/* button 생각해보기 */}
       <div className={classes.seeMore}>
